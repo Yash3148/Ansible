@@ -1,0 +1,19 @@
+---
+ - name: webhosts
+   hosts: all
+   tasks:
+     - package:
+        name: httpd
+        state: present
+     - copy:
+        dest: "/var/www/html/index.html"
+        content: "Hello Linux"
+     - service:
+         name: httpd
+         state: started
+         enabled: yes
+     - firewalld:
+         service: http
+         permanent: yes
+         state: enabled
+---
