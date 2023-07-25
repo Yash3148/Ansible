@@ -1,0 +1,19 @@
+---
+ - name: hosting webserver
+   hosts: all
+   tasks: 
+     - name: install httpd
+       yum: 
+        name: httpd
+        state: present
+     - name: start service
+       service:
+         name: httpd
+         state: started
+         enabled: yes
+     - name: starting firewall
+       firewalld:
+         service: http
+         permanent: yes
+         state: enabled
+---
