@@ -1,0 +1,37 @@
+---
+ - name: yum repo config
+   hosts: servera
+   tasks:
+    - file:
+        state: directory
+        path: /tmp/repo
+    - mount:
+        src: /dev/sr1
+        path: /tmp/repo
+        fstype: "iso9660"
+        state: mounted
+    - yum_repository:
+        baseurl: "/tmp/repo/AppStream"
+        name: "myrepo"
+        description: "my ansible repo"
+        gpgcheck: no
+    - yum_repository:
+        baseurl: "/tmp/repo/BaseOS"
+        name: "myrepo2"
+        description: "my ansible repo2"
+        gpgcheck: no
+    - package:
+        name: httpd
+        state: present
+    - copy:
+        dest: "/var/www/html/index.html"
+        content: "this is my web server"
+    - service:
+        name: httpd
+        state: started
+        enabled: true
+    - firewalld:
+        port: 80/tcp
+        state: enabled
+        permanent: yes
+---
