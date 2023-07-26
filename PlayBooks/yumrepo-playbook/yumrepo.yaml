@@ -1,6 +1,6 @@
 ---
  - name: yum repo config
-   hosts: servera
+   hosts: all
    tasks:
     - file:
         state: directory
