@@ -1,0 +1,90 @@
+---
+ - name: Installing and Configuring Jenkins
+   hosts: JenkinsMaster
+   tasks:
+     - name: update and upgrade packages
+       apt:
+         upgrade: yes
+         update_cache: yes
+     
+     - name: Installing Java 11
+       apt:
+         name: default-jdk
+         state: present
+     
+     - name: verifying Java 
+       command: java -version
+       register: java_version
+     
+     - name: Printing Java version
+       debug:
+         msg:  "{{ java_version  }}"
+
+     - name: Adding Jenkins Key
+       apt_key:
+         url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+         state: present
+     
+     - name: Adding jenkins Repo
+       copy:
+         dest: /etc/apt/sources.list.d/jenkins.list
+         content: deb http://pkg.jenkins.io/debian-stable binary/
+
+     - name: Update packages
+       apt:
+         update_cache: yes
+
+     - name: Installing Jenkins
+       apt:
+         name: jenkins
+         state: present
+
+     - name: Starting And Enabling Jenkins service
+       service:
+         name: jenkins
+         state: started
+         enabled: yes
+      
+     - name: Install request packages for docker
+       apt:
+         pkg:
+           - apt-transport-https 
+           - ca-certificates 
+           - gnupg
+           - lsb-release
+           - curl 
+           - software-properties-common
+         state: present
+
+     - name: Adding key for Docker
+       apt_key:
+         url: https://download.docker.com/linux/ubuntu/gpg
+         state: present
+
+     - name: Adding docker Repo
+       apt_repository:
+         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+         state: present
+
+     - name: Updating packages
+       apt:
+         update_cache: yes
+         upgrade: yes
+     - name: Installing Docker
+       apt:
+         pkg: 
+           - docker-ce  
+           - docker-ce-cli 
+           - containerd.io
+
+     - name: Staring and enabling docker
+       service:
+         name: docker
+         state: started
+         enabled: yes 
+
+     - name: Adding jenkins to docker group
+       user:
+         name: jenkins
+         groups: docker
+         append: yes
