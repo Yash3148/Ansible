@@ -1,0 +1,9 @@
+---
+ - name: mycars
+   hosts: all
+   vars: 
+    - car: swift
+    - color: red
+   tasks:
+     - name: vars
+       shell: echo "my car is {{ car }} and it's color is {{ color }}"  >> /home/ansible/varfile.txt
