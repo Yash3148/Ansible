@@ -1,0 +1,12 @@
+---
+ - name: list var in ansible
+   hosts: all
+   vars:
+      pkg:
+       - vsftpd
+       - nfs-utils
+       - zsh
+   tasks: 
+       - yum:
+          name: "{{ pkg }}"
+          state: present 
